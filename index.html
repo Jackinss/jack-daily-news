@@ -188,6 +188,19 @@
   }
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
+  /* locked: built but not yet released */
+  .paper.locked .clip{pointer-events:none}
+  .paper.locked .hl,.paper.locked .deck{filter:blur(6px);opacity:.45;user-select:none}
+  .paper.locked .new{color:var(--fg-dim)}
+  .paper.locked .tools{display:none}
+  .lock{
+    display:none;align-items:center;gap:8px;
+    margin-top:14px;padding-top:11px;border-top:2px solid var(--ink);
+    font-family:'Space Mono',ui-monospace,monospace;font-size:9.5px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  }
+  .paper.locked .lock{display:flex}
+
   .fade{opacity:0;transform:translateY(12px)}
   .fade.in{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
   @media (prefers-reduced-motion:reduce){
@@ -224,7 +237,7 @@
   </div>
 
   <div class="rack" id="rack">
-    <article class="paper featured fade" data-n="4" style="--i:0;--tilt:0deg">
+    <article class="paper featured fade" data-n="4" data-release="2026-09-03T07:00:00" data-drops="&#128274; Drops THU 3 SEP, 07:00" style="--i:0;--tilt:0deg">
   <span class="new">New</span>
   <a class="clip" href="2026-09-03-n4.html">
     <div class="plate">
@@ -236,13 +249,14 @@
     <h2 class="hl">Nostalgia becomes a growth lever, creator economy pricing cracks, Google Assistant gives way to Gemini.</h2>
     <p class="deck">Pinterest Hobbies &middot; creator economy bubble &middot; Assistant to Gemini &middot; Reddit 15s video metric &middot; Mulino Bianco 1975</p>
   </a>
+  <div class="lock"><span></span></div>
   <div class="tools">
     <button class="t-read" type="button" aria-pressed="false">Unread</button>
     <button class="t-star" type="button" aria-pressed="false" aria-label="Star">&#9733;</button>
     <a class="go" href="2026-09-03-n4.html">Read &rarr;</a>
   </div>
 </article>
-<article class="paper fade" data-n="3" style="--i:1;--tilt:-0.5deg">
+<article class="paper fade" data-n="3" data-release="2026-09-01T07:00:00" data-drops="&#128274; Drops TUE 1 SEP, 07:00" style="--i:1;--tilt:-0.5deg">
   <span class="new">New</span>
   <a class="clip" href="2026-09-01-n3.html">
     <div class="plate">
@@ -254,13 +268,14 @@
     <h2 class="hl">Meta says creators beat brands, OpenAI&#x27;s luxury trip backfires, raw stays the currency of social.</h2>
     <p class="deck">Meta Partnership Ads &middot; Instagram tools &middot; OpenAI Summer Camp &middot; Omo Book of Dirt &middot; YouTube &middot; Reddit &middot; Kodak 1888</p>
   </a>
+  <div class="lock"><span></span></div>
   <div class="tools">
     <button class="t-read" type="button" aria-pressed="false">Unread</button>
     <button class="t-star" type="button" aria-pressed="false" aria-label="Star">&#9733;</button>
     <a class="go" href="2026-09-01-n3.html">Read &rarr;</a>
   </div>
 </article>
-<article class="paper fade" data-n="2" style="--i:2;--tilt:0.4deg">
+<article class="paper fade" data-n="2" data-release="2026-09-01T07:00:00" data-drops="&#128274; Drops TUE 1 SEP, 07:00" style="--i:2;--tilt:0.4deg">
   <span class="new">New</span>
   <a class="clip" href="2026-09-01-n2.html">
     <div class="plate">
@@ -272,13 +287,14 @@
     <h2 class="hl">Good Good Golf&#x27;s shock spot backfires within hours, Google Ads forces the jump to AI Max, raw beats polished.</h2>
     <p class="deck">Good Good Golf &middot; Google Ads AI Max &middot; The Trade Desk &middot; OpenAI licences &middot; Heineken x Serena &middot; Benetton 1991</p>
   </a>
+  <div class="lock"><span></span></div>
   <div class="tools">
     <button class="t-read" type="button" aria-pressed="false">Unread</button>
     <button class="t-star" type="button" aria-pressed="false" aria-label="Star">&#9733;</button>
     <a class="go" href="2026-09-01-n2.html">Read &rarr;</a>
   </div>
 </article>
-<article class="paper fade" data-n="1" style="--i:3;--tilt:-0.4deg">
+<article class="paper fade" data-n="1" data-release="2026-09-01T07:00:00" data-drops="&#128274; Drops TUE 1 SEP, 07:00" style="--i:3;--tilt:-0.4deg">
   <span class="new">New</span>
   <a class="clip" href="2026-09-01-n1.html">
     <div class="plate">
@@ -290,6 +306,7 @@
     <h2 class="hl">Honest campaigns win H1 2026, Instagram rebrands after ten years, YouTube resets what counts as a view.</h2>
     <p class="deck">Honesty campaigns &middot; Instagram rebrand &middot; YouTube view count &middot; Google Ads &middot; AI shopping agents &middot; Avis 1962</p>
   </a>
+  <div class="lock"><span></span></div>
   <div class="tools">
     <button class="t-read" type="button" aria-pressed="false">Unread</button>
     <button class="t-star" type="button" aria-pressed="false" aria-label="Star">&#9733;</button>
@@ -312,6 +329,22 @@
     var read=load(LS_READ),star=load(LS_STAR);
     var rack=document.getElementById('rack');
     var papers=[].slice.call(document.querySelectorAll('.paper'));
+
+    // --- release lock: an issue built early stays locked until its drop time ---
+    papers.forEach(function(p){
+      var rel=p.getAttribute('data-release');
+      if(!rel) return;
+      var t=Date.parse(rel);
+      if(isNaN(t)||Date.now()>=t) return;
+      p.classList.add('locked');
+      var lk=p.querySelector('.lock');
+      if(lk){var sp=lk.querySelector('span');if(sp)sp.textContent=p.getAttribute('data-drops')||'Coming soon';}
+      var wait=Math.min(t-Date.now(),2147483000);
+      setTimeout(function(){
+        p.classList.remove('locked');
+        p.classList.add('is-new');
+      },wait);
+    });
 
     papers.forEach(function(p){
       var n=p.getAttribute('data-n');
