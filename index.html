@@ -1,4 +1,6 @@
 <title>Jack's Daily News</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Jack's Daily News: every issue on the newsstand. Open a paper to read it, mark read and star the ones that matter.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,14 +45,17 @@
     font-family:'Space Mono',ui-monospace,monospace;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1080px;margin:0 auto;padding:40px 22px 120px}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 22px 120px;overflow-x:hidden}
+  @media (max-width:560px){.wrap{padding:26px 15px 90px}}
 
   header.sign{text-align:center;margin:4px 0 26px;position:relative}
   .sign .kick,.sign h1,.sign .count{position:relative;z-index:1}
   .confetti{position:absolute;inset:-14px 0 -6px;pointer-events:none;z-index:0;font-size:18px}
   .confetti span{position:absolute;line-height:1;user-select:none;opacity:.92;transform:rotate(var(--r,0deg));
     filter:saturate(1.05) drop-shadow(0 2px 4px rgba(0,0,0,.12))}
-  @media (max-width:620px){.confetti{font-size:12px}}
+  @media (max-width:620px){.confetti{font-size:11px;inset:-8px 2% -4px}}
+  @media (max-width:560px){.confetti{font-size:9px}
+    .confetti span:nth-child(3),.confetti span:nth-child(9){display:none}}
   @media (prefers-reduced-motion:no-preference){
     .confetti span{animation:bob 6s ease-in-out infinite}
   }
@@ -77,6 +82,7 @@
     display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));
     gap:40px 34px;align-items:start;
   }
+  @media (max-width:560px){.rack{grid-template-columns:1fr;gap:30px}}
   .paper{
     position:relative;background:var(--paper);color:var(--ink);
     border:1px solid var(--line);padding:18px 18px 15px;
